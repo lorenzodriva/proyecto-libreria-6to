@@ -22,8 +22,19 @@ function getLibros() {
     }
 }
 
+function formatearPrecioUSD(valor) {
+    const numero = Number(valor);
+    if (Number.isNaN(numero)) return 'USD 0.00';
+    return `USD ${numero.toFixed(2)}`;
+}
+
 function guardarLibros(libros) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(libros));
+    const normalizados = libros.map(libro => ({
+        ...libro,
+        precio: typeof libro.precio === 'string' ? libro.precio.replace(/^\$\s*/, 'USD ') : formatearPrecioUSD(libro.precio)
+    }));
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(normalizados));
 }
 
 function obtenerGenerosSeleccionados() {
@@ -122,7 +133,7 @@ function construirLibroDesdeFormulario() {
         titulo,
         autor,
         descripcion,
-        precio: `$${precioValor.toFixed(2)}`,
+        precio: formatearPrecioUSD(precioValor),
         img: urlImagen,
         generos,
         estado: 'En revisión'
