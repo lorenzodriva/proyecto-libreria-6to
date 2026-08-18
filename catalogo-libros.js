@@ -1,37 +1,82 @@
-const libros = [
-	{id:1, titulo: 'Cien años de soledad', autor: 'Gabriel García Márquez', precio: 'USD 12.99', img: 'https://via.placeholder.com/400x300?text=Cien+años'},
-	{id:2, titulo: 'Don Quijote de la Mancha', autor: 'Miguel de Cervantes', precio: 'USD 9.50', img: 'https://via.placeholder.com/400x300?text=Don+Quijote'},
-	{id:3, titulo: 'La sombra del viento', autor: 'Carlos Ruiz Zafón', precio: 'USD 11.00', img: 'https://via.placeholder.com/400x300?text=La+sombra'},
-	{id:4, titulo: 'El principito', autor: 'Antoine de Saint-Exupéry', precio: 'USD 7.99', img: 'https://via.placeholder.com/400x300?text=Principito'},
-	{id:5, titulo: '1984', autor: 'George Orwell', precio: 'USD 8.75', img: 'https://via.placeholder.com/400x300?text=1984'},
-	{id:6, titulo: 'La ciudad y los perros', autor: 'Mario Vargas Llosa', precio: 'USD 10.25', img: 'https://via.placeholder.com/400x300?text=La+ciudad'}
+const STORAGE_KEY = 'libreria-libros';
+
+const librosIniciales = [
+    { id: 1, titulo: 'Cien años de soledad', autor: 'Gabriel García Márquez', precio: 'USD 12.99', img: 'https://via.placeholder.com/400x300?text=Cien+a%C3%B1os', generos: ['Realismo mágico'], descripcion: 'Una novela épica y compleja.', estado: 'Publicado' },
+    { id: 2, titulo: 'Don Quijote de la Mancha', autor: 'Miguel de Cervantes', precio: 'USD 9.50', img: 'https://via.placeholder.com/400x300?text=Don+Quijote', generos: ['Clásico'], descripcion: 'La obra más emblemática de la literatura española.', estado: 'Publicado' },
+    { id: 3, titulo: 'La sombra del viento', autor: 'Carlos Ruiz Zafón', precio: 'USD 11.00', img: 'https://via.placeholder.com/400x300?text=La+sombra', generos: ['Misterio'], descripcion: 'Un misterio lleno de evocación y nostalgia.', estado: 'Publicado' },
+    { id: 4, titulo: 'El principito', autor: 'Antoine de Saint-Exupéry', precio: 'USD 7.99', img: 'https://via.placeholder.com/400x300?text=Principito', generos: ['Infantil'], descripcion: 'Una reflexión poética y profunda.', estado: 'Publicado' },
+    { id: 5, titulo: '1984', autor: 'George Orwell', precio: 'USD 8.75', img: 'https://via.placeholder.com/400x300?text=1984', generos: ['Distopía'], descripcion: 'Un clásico de la ciencia ficción política.', estado: 'Publicado' },
+    { id: 6, titulo: 'La ciudad y los perros', autor: 'Mario Vargas Llosa', precio: 'USD 10.25', img: 'https://via.placeholder.com/400x300?text=La+ciudad', generos: ['Novela'], descripcion: 'Una obra brutal y realista.', estado: 'Publicado' }
 ];
 
-function crearCard(libro){
-	const card = document.createElement('article');
-	card.className = 'card';
+function getLibros() {
+    const guardados = localStorage.getItem(STORAGE_KEY);
 
-	card.innerHTML = `
-		<img src="${libro.img}" alt="Portada de ${libro.titulo}">
-		<div class="info">
-			<h3 class="title">${libro.titulo}</h3>
-			<div class="meta">${libro.autor}</div>
-			<div class="price">${libro.precio}</div>
-			<div class="actions">
-				<button class="btn btn-primary">Agregar</button>
-				<button class="btn btn-secondary">Ver</button>
-			</div>
-		</div>
-	`;
+    if (!guardados) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(librosIniciales));
+        return [...librosIniciales];
+    }
 
-	return card;
+    try {
+        const parsed = JSON.parse(guardados);
+        return Array.isArray(parsed) && parsed.length ? parsed : [...librosIniciales];
+    } catch (error) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(librosIniciales));
+        return [...librosIniciales];
+    }
 }
 
-function renderCatalogo(){
-	const cont = document.getElementById('catalogo');
-	if(!cont) return;
-	cont.innerHTML = '';
-	libros.forEach(libro => cont.appendChild(crearCard(libro)));
+function crearCard(libro) {
+    const card = document.createElement('article');
+    card.className = 'card';
+
+    card.innerHTML = `
+        <img src="${libro.img}" alt="Portada de ${libro.titulo}">
+        <div class="info">
+            <h3 class="title">${libro.titulo}</h3>
+            <div class="meta">${libro.autor}</div>
+            <div class="meta">${Array.isArray(libro.generos) ? libro.generos.join(', ') : 'Sin género'}</div>
+            <div class="price">${libro.precio}</div>
+            <div class="actions">
+                <button class="btn btn-primary" type="button">Agregar</button>
+                <button class="btn btn-secondary" type="button">Ver</button>
+            </div>
+        </div>
+    `;
+
+    return card;
 }
 
-document.addEventListener('DOMContentLoaded', renderCatalogo);
+function renderCatalogo() {
+    const cont = document.getElementById('catalogo');
+    if (!cont) return;
+
+    const libros = getLibros();
+    cont.innerHTML = '';
+    libros.forEach(libro => cont.appendChild(crearCard(libro)));
+}
+
+function setupMenu() {
+    const toggle = document.getElementById('menu-toggle');
+    const panel = document.getElementById('creator-menu');
+    const actionButton = document.getElementById('agregar-libro-btn');
+
+    if (toggle && panel) {
+        toggle.addEventListener('click', () => {
+            const expanded = toggle.getAttribute('aria-expanded') === 'true';
+            toggle.setAttribute('aria-expanded', String(!expanded));
+            panel.classList.toggle('hidden');
+        });
+    }
+
+    if (actionButton) {
+        actionButton.addEventListener('click', () => {
+            window.location.href = 'agregar-libro.html';
+        });
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    setupMenu();
+    renderCatalogo();
+});

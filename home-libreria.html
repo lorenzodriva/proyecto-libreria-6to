@@ -8,15 +8,33 @@
 </head>
 <body>
     <header class="site-header">
-        <h1>Bienvenido a la Librería</h1>
-        <p>Explora nuestra selección de libros y encuentra tu próxima lectura favorita.</p>
+        <div class="topbar">
+            <div class="brand-block">
+                <h1>Bienvenido a la Librería</h1>
+                <p>Explora nuestra selección de libros y encuentra tu próxima lectura favorita.</p>
+            </div>
+            <div class="creator-menu">
+                <button id="menu-toggle" class="menu-trigger" type="button" aria-expanded="false">Opciones del creador</button>
+                <div id="creator-menu" class="menu-panel hidden">
+                    <a href="agregar-libro.html">Agregar libros</a>
+                    <a href="#">Administrar stock</a>
+                    <a href="#">Revisión</a>
+                </div>
+            </div>
+        </div>
     </header>
 
-    <main>
+    <main class="page-shell">
         <section class="catalog-section">
-            <h2>Catálogo de artículos</h2>
+            <div class="section-header">
+                <h2>Catálogo de artículos</h2>
+            </div>
             <div id="catalogo" class="cards-grid" aria-live="polite"></div>
         </section>
+
+        <button id="agregar-libro-btn" class="fab" type="button" aria-label="Agregar nuevo libro">
+            <span>+</span>
+        </button>
     </main>
 
     <script src="catalogo-libros.js"></script>
