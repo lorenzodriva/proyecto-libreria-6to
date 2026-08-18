@@ -107,6 +107,61 @@ body {
     position: relative;
 }
 
+.popular-section {
+    max-width: 1180px;
+    margin: 0 auto 28px;
+    border: 3px solid var(--line);
+    border-radius: 20px;
+    background: rgba(255,255,255,0.05);
+    padding: 18px 20px;
+}
+
+.popular-header h2 {
+    margin: 0 0 18px;
+    font-size: clamp(1.8rem, 2vw, 2.3rem);
+}
+
+.popular-book-card {
+    display: grid;
+    grid-template-columns: minmax(260px, 360px) 1fr;
+    gap: 24px;
+    align-items: center;
+}
+
+.popular-cover-wrap {
+    width: 100%;
+    max-width: 360px;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 3px solid var(--line);
+    background: #e5e5e5;
+}
+
+.popular-cover {
+    display: block;
+    width: 100%;
+    height: 330px;
+    object-fit: cover;
+}
+
+.popular-info h3 {
+    margin: 0 0 10px;
+    font-size: clamp(2rem, 2.8vw, 3rem);
+}
+
+.popular-author,
+.popular-genres,
+.popular-price {
+    margin: 0 0 8px;
+    font-size: 1.15rem;
+}
+
+.popular-price {
+    margin-top: 16px;
+    font-size: 1.7rem;
+    font-weight: 700;
+}
+
 .catalog-section {
     border: 3px solid var(--line);
     border-radius: 18px;
@@ -136,13 +191,41 @@ body {
     box-shadow: 0 4px 10px rgba(0,0,0,0.04);
 }
 
+.card-image-wrap {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    border: 2px solid var(--line);
+    background: #ddd;
+}
+
 .card img {
+    display: block;
     width: 100%;
     height: 220px;
     object-fit: cover;
     border-radius: 12px;
-    border: 2px solid var(--line);
-    background: #ddd;
+}
+
+.card-description {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 18px;
+    background: rgba(17, 24, 39, 0.8);
+    color: #fff;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    font-size: 0.92rem;
+    line-height: 1.4;
+}
+
+.card-image-wrap:hover .card-description,
+.card-image-wrap:focus-within .card-description {
+    opacity: 1;
 }
 
 .card .info { display: flex; flex-direction: column; gap: 8px; }
@@ -417,6 +500,8 @@ body {
     body { padding: 12px; }
     .topbar { flex-direction: column; }
     .menu-trigger { width: 100%; }
+    .popular-book-card { grid-template-columns: 1fr; }
+    .popular-cover { height: 240px; }
     .action-row { flex-wrap: wrap; }
     .action-row .btn { flex: 1 1 150px; }
     .fab { right: 18px; bottom: 18px; }

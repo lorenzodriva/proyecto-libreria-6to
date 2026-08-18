@@ -1,5 +1,16 @@
 const STORAGE_KEY = 'libreria-libros';
 
+const libroMasPopular = {
+    id: 999,
+    titulo: 'La Biblia 2',
+    autor: 'Ricardo Fort',
+    precio: 'USD 1.50',
+    img: 'https://i1.whakoom.com/small/29/1b/912b88072b38420db2dc44df95cc0c5e.jpg',
+    generos: ['Terror', 'Comedia', 'Romance', 'Otros'],
+    descripcion: 'Una historia intensa, atrapante y de gran impacto para los lectores más curiosos.',
+    estado: 'Publicado'
+};
+
 const librosIniciales = [
     { id: 1, titulo: 'Cien años de soledad', autor: 'Gabriel García Márquez', precio: 'USD 12.99', img: 'https://via.placeholder.com/400x300?text=Cien+a%C3%B1os', generos: ['Realismo mágico'], descripcion: 'Una novela épica y compleja.', estado: 'Publicado' },
     { id: 2, titulo: 'Don Quijote de la Mancha', autor: 'Miguel de Cervantes', precio: 'USD 9.50', img: 'https://via.placeholder.com/400x300?text=Don+Quijote', generos: ['Clásico'], descripcion: 'La obra más emblemática de la literatura española.', estado: 'Publicado' },
@@ -26,12 +37,38 @@ function getLibros() {
     }
 }
 
+function renderPopularBook() {
+    const popularContainer = document.getElementById('libro-mas-popular');
+    if (!popularContainer) return;
+
+    popularContainer.innerHTML = `
+        <div class="popular-book-card">
+            <div class="popular-cover-wrap">
+                <img src="${libroMasPopular.img}" alt="Portada de ${libroMasPopular.titulo}" class="popular-cover">
+            </div>
+            <div class="popular-info">
+                <h3>${libroMasPopular.titulo}</h3>
+                <p class="popular-author">${libroMasPopular.autor}</p>
+                <p class="popular-genres">${libroMasPopular.generos.join(', ')}</p>
+                <p class="popular-price">${libroMasPopular.precio}</p>
+            </div>
+        </div>
+    `;
+}
+
 function crearCard(libro) {
     const card = document.createElement('article');
     card.className = 'card';
 
+    const descripcion = libro.descripcion || 'Sin descripción disponible.';
+
     card.innerHTML = `
-        <img src="${libro.img}" alt="Portada de ${libro.titulo}">
+        <div class="card-image-wrap">
+            <img src="${libro.img}" alt="Portada de ${libro.titulo}">
+            <div class="card-description">
+                <p>${descripcion}</p>
+            </div>
+        </div>
         <div class="info">
             <h3 class="title">${libro.titulo}</h3>
             <div class="meta">${libro.autor}</div>
@@ -78,5 +115,6 @@ function setupMenu() {
 
 document.addEventListener('DOMContentLoaded', () => {
     setupMenu();
+    renderPopularBook();
     renderCatalogo();
 });
