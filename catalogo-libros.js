@@ -20,6 +20,23 @@ const librosIniciales = [
     { id: 6, titulo: 'La ciudad y los perros', autor: 'Mario Vargas Llosa', precio: 'USD 10.25', img: 'https://via.placeholder.com/400x300?text=La+ciudad', generos: ['Novela'], descripcion: 'Una obra brutal y realista.', estado: 'Publicado' }
 ];
 
+function normalizarPrecioUSD(precio) {
+    if (typeof precio !== 'string') {
+        return `USD ${Number(precio || 0).toFixed(2)}`;
+    }
+
+    const limpio = precio.trim();
+    if (!limpio) {
+        return 'USD 0.00';
+    }
+
+    const conUSD = limpio.toUpperCase().startsWith('USD');
+    const sinPrecio = limpio.replace(/[^0-9.]/g, '');
+    const valor = Number(sinPrecio || 0);
+
+    return conUSD ? `USD ${valor.toFixed(2)}` : `USD ${valor.toFixed(2)}`;
+}
+
 function getLibros() {
     const guardados = localStorage.getItem(STORAGE_KEY);
 
@@ -30,7 +47,17 @@ function getLibros() {
 
     try {
         const parsed = JSON.parse(guardados);
-        return Array.isArray(parsed) && parsed.length ? parsed : [...librosIniciales];
+        const normalizados = Array.isArray(parsed) ? parsed.map(libro => ({
+            ...libro,
+            precio: normalizarPrecioUSD(libro.precio)
+        })) : [...librosIniciales];
+
+        if (Array.isArray(parsed) && parsed.length) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(normalizados));
+            return normalizados;
+        }
+
+        return [...librosIniciales];
     } catch (error) {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(librosIniciales));
         return [...librosIniciales];
